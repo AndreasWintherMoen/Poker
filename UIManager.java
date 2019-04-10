@@ -17,20 +17,6 @@ public class UIManager
 	
 	public static UIManager instance;
 	
-	
-	
-	public void displayPlayerCards(List<Card> cards)
-	{
-		loadImage(PokerUtil.getFilePath(cards.get(0)), playerFirstCard);
-		loadImage(PokerUtil.getFilePath(cards.get(1)), playerSecondCard);
-	}
-	
-	public void displayOpponentCards(List<Card> cards)
-	{
-		loadImage(PokerUtil.getFilePath(cards.get(0)), opponentFirstCard);
-		loadImage(PokerUtil.getFilePath(cards.get(1)), opponentSecondCard);
-	}
-	
 	@FXML
 	protected void initialize()
 	{
@@ -43,8 +29,20 @@ public class UIManager
 		displayTestCards();
 		
 		instance = this;
-
+		
 		new GameManager();
+	}
+	
+	public void displayPlayerCards(List<Card> cards)
+	{
+		loadImage(PokerUtil.getFilePath(cards.get(0)), playerFirstCard);
+		loadImage(PokerUtil.getFilePath(cards.get(1)), playerSecondCard);
+	}
+	
+	public void displayOpponentCards(List<Card> cards)
+	{
+		loadImage(PokerUtil.getFilePath(cards.get(0)), opponentFirstCard);
+		loadImage(PokerUtil.getFilePath(cards.get(1)), opponentSecondCard);
 	}
 	
 	private void displayTestCards()
