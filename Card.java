@@ -137,7 +137,7 @@ public class Card
 	@Override
 	public String toString()
 	{
-		return String.format("%s%s", this.suit, intValueToString(this.value));
+		return String.format("%s%s", intValueToString(this.value), this.suit);
 	}
 	
 	private String intValueToString(int value) throws IllegalStateException

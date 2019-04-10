@@ -1,6 +1,8 @@
 package poker;
 
 import java.io.File;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,6 +18,13 @@ public class UIManager
 	public static UIManager instance;
 	
 	
+	
+	public void displayPlayerCards(List<Card> cards)
+	{
+//		playerFirstCard.setImage(cards.get(0));
+		
+		
+	}
 	
 	@FXML
 	protected void initialize()
@@ -39,10 +48,10 @@ public class UIManager
 		loadImage("src/poker/resources/cards/back_cards-07.png", background); 
 		
 		// TODO: Find better card images which are 100x140 pixels (at least 10:14 ratio)
-		loadImage("src/poker/resources/cards/2C.png", playerFirstCard);
-		loadImage("src/poker/resources/cards/10D.png", playerSecondCard);
-		loadImage("src/poker/resources/cards/5H.png", opponentFirstCard);
-		loadImage("src/poker/resources/cards/KS.png", opponentSecondCard);
+		loadImage(PokerUtil.getFilePath(Cards.C1), playerFirstCard);
+		loadImage(PokerUtil.getFilePath(Cards.D5), playerSecondCard);
+		loadImage(PokerUtil.getFilePath(Cards.H10), opponentFirstCard);
+		loadImage(PokerUtil.getFilePath(Cards.S13), opponentSecondCard);
 	}
 	
 	private void loadImage(String filepath, ImageView view)
