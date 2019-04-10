@@ -7,5 +7,7 @@ public class Player
 	public Player(Deck deck)
 	{
 		this.cards = new CardHolder(deck);
+		UIManager.instance.displayPlayerCards(this.cards.getCards());
+		System.out.println("Player cards: " + this.cards.getCards());
 	}
 }

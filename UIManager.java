@@ -21,9 +21,8 @@ public class UIManager
 	
 	public void displayPlayerCards(List<Card> cards)
 	{
-//		playerFirstCard.setImage(cards.get(0));
-		
-		
+		loadImage(PokerUtil.getFilePath(cards.get(0)), playerFirstCard);
+		loadImage(PokerUtil.getFilePath(cards.get(1)), playerSecondCard);
 	}
 	
 	@FXML
@@ -36,9 +35,10 @@ public class UIManager
 		
 		System.out.println("UI Manager initialized...");
 		displayTestCards();
-		new GameManager();
 		
 		instance = this;
+
+		new GameManager();
 	}
 	
 	private void displayTestCards()
