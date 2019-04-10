@@ -5,7 +5,6 @@ public class PokerUtil
 	public static String getFilePath(Card card)
 	{
 		String filePath = "src/poker/resources/cards/";
-		System.out.println(card.toString());
 		filePath += card.toString();
 		filePath += ".png";
 		
