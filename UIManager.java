@@ -13,12 +13,23 @@ public class UIManager
 	@FXML ImageView playerFirstCard;
 	@FXML ImageView playerSecondCard;
 	
+	public static UIManager instance;
+	
+	
+	
 	@FXML
 	protected void initialize()
 	{
+		if (instance != null)
+		{
+			throw new RuntimeException("Tried to initialize more than one UIManager.");
+		}
+		
 		System.out.println("UI Manager initialized...");
 		displayTestCards();
 		new GameManager();
+		
+		instance = this;
 	}
 	
 	private void displayTestCards()
