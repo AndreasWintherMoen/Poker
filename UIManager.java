@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -14,6 +15,12 @@ public class UIManager
 	@FXML ImageView opponentSecondCard;
 	@FXML ImageView playerFirstCard;
 	@FXML ImageView playerSecondCard;
+	
+	@FXML Button restartButton;
+	@FXML Button foldButton;
+	@FXML Button checkButton;
+	@FXML Button callButton;
+	@FXML Button raiseButton;
 	
 	public static UIManager instance;
 	
@@ -43,6 +50,36 @@ public class UIManager
 	{
 		loadImage(PokerUtil.getFilePath(cards.get(0)), opponentFirstCard);
 		loadImage(PokerUtil.getFilePath(cards.get(1)), opponentSecondCard);
+	}
+
+	@FXML
+	protected void clickRestart()
+	{
+		System.out.println("Not implemented");
+	}
+	
+	@FXML
+	protected void clickFold()
+	{
+		System.out.println("Not implemented");
+	}
+
+	@FXML
+	protected void clickCheck()
+	{
+		System.out.println("Not implemented");
+	}
+
+	@FXML
+	protected void clickCall()
+	{
+		System.out.println("Not implemented");
+	}
+
+	@FXML
+	protected void clickRaise()
+	{
+		System.out.println("Not implemented");
 	}
 	
 	private void displayTestCards()
