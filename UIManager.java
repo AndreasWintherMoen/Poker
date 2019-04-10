@@ -18,6 +18,7 @@ public class UIManager
 	{
 		System.out.println("UI Manager initialized...");
 		displayTestCards();
+		new GameManager();
 	}
 	
 	private void displayTestCards()
