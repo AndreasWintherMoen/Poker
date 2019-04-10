@@ -6,8 +6,16 @@ public class GameManager
 	private Player player;
 	private Player opponent;
 	
+	public static GameManager instance;
+	
 	public GameManager()
 	{
+		if (instance != null)
+		{
+			throw new RuntimeException("Tried to initialize more than one UIManager.");
+		}
+		instance = this;
+		
 		System.out.println("Game Manager initialized...");
 		deck = new Deck();
 		System.out.println("Randomized deck: " + deck);

@@ -55,7 +55,7 @@ public class UIManager
 	@FXML
 	protected void clickRestart()
 	{
-		System.out.println("Not implemented");
+		GameManager.instance.newRound();
 	}
 	
 	@FXML
