@@ -25,6 +25,12 @@ public class UIManager
 		loadImage(PokerUtil.getFilePath(cards.get(1)), playerSecondCard);
 	}
 	
+	public void displayOpponentCards(List<Card> cards)
+	{
+		loadImage(PokerUtil.getFilePath(cards.get(0)), opponentFirstCard);
+		loadImage(PokerUtil.getFilePath(cards.get(1)), opponentSecondCard);
+	}
+	
 	@FXML
 	protected void initialize()
 	{

@@ -13,9 +13,9 @@ public class GameManager
 		System.out.println("Randomized deck: " + deck);
 		
 		System.out.println("Creating player");
-		player = new Player(deck);
+		player = new Player(deck, true);
 		
 		System.out.println("Creating opponent");
-		opponent = new Player(deck);
+		opponent = new Player(deck, false);
 	}
 }
