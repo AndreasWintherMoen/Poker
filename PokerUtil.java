@@ -5,7 +5,14 @@ public class PokerUtil
 	public static String getFilePath(Card card)
 	{
 		String filePath = "src/poker/resources/cards/";
-		filePath += card.toString();
+		if (card == null)
+		{
+			filePath += "EmptyCard";
+		}
+		else
+		{
+			filePath += card.toString();
+		}
 		filePath += ".png";
 		
 		return filePath;

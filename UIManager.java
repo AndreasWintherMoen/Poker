@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import poker.Enums.Cards;
 
 public class UIManager
 {
@@ -15,6 +16,11 @@ public class UIManager
 	@FXML ImageView opponentSecondCard;
 	@FXML ImageView playerFirstCard;
 	@FXML ImageView playerSecondCard;
+	@FXML ImageView tableCard1;
+	@FXML ImageView tableCard2;
+	@FXML ImageView tableCard3;
+	@FXML ImageView tableCard4;
+	@FXML ImageView tableCard5;
 	
 	@FXML Button restartButton;
 	@FXML Button foldButton;
@@ -34,6 +40,7 @@ public class UIManager
 		
 		System.out.println("UI Manager initialized...");
 		displayTestCards();
+		displayTableCards();
 		
 		instance = this;
 		
@@ -42,20 +49,30 @@ public class UIManager
 	
 	public void displayPlayerCards(Card[] cards)
 	{
-		loadImage(PokerUtil.getFilePath(cards[0]), playerFirstCard);
-		loadImage(PokerUtil.getFilePath(cards[1]), playerSecondCard);
+		displayCard(cards[0], playerFirstCard);
+		displayCard(cards[1], playerSecondCard);
 	}
 	
 	public void displayOpponentCards(Card[] cards)
 	{
-		loadImage(PokerUtil.getFilePath(cards[0]), opponentFirstCard);
-		loadImage(PokerUtil.getFilePath(cards[1]), opponentSecondCard);
+		displayCard(cards[0], opponentFirstCard);
+		displayCard(cards[1], opponentSecondCard);
 	}
-
+	
+	public void displayTableCards()
+	{
+		// Displays empty table cards
+		displayCard(null, tableCard1);
+		displayCard(null, tableCard2);
+		displayCard(null, tableCard3);
+		displayCard(null, tableCard4);
+		displayCard(null, tableCard5);
+	}
+	
 	@FXML
 	protected void clickRestart()
 	{
-		GameManager.instance.newRound();
+		GameManager.instance.newGame();
 	}
 	
 	@FXML
@@ -82,11 +99,16 @@ public class UIManager
 		System.out.println("Not implemented");
 	}
 	
+	private void displayCard(Card card, ImageView cardDisplay)
+	{
+		loadImage(PokerUtil.getFilePath(card), cardDisplay);
+	}
+	
 	private void displayTestCards()
 	{
 		// The background is temporary
 		// TODO: Find a better background
-		loadImage("src/poker/resources/cards/back_cards-07.png", background); 
+		loadImage("src/poker/resources/TableBackground.jpg", background); 
 		
 		// TODO: Find better card images which are 100x140 pixels (at least 10:14 ratio)
 		loadImage(PokerUtil.getFilePath(Cards.C1), playerFirstCard);
