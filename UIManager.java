@@ -40,16 +40,16 @@ public class UIManager
 		new GameManager();
 	}
 	
-	public void displayPlayerCards(List<Card> cards)
+	public void displayPlayerCards(Card[] cards)
 	{
-		loadImage(PokerUtil.getFilePath(cards.get(0)), playerFirstCard);
-		loadImage(PokerUtil.getFilePath(cards.get(1)), playerSecondCard);
+		loadImage(PokerUtil.getFilePath(cards[0]), playerFirstCard);
+		loadImage(PokerUtil.getFilePath(cards[1]), playerSecondCard);
 	}
 	
-	public void displayOpponentCards(List<Card> cards)
+	public void displayOpponentCards(Card[] cards)
 	{
-		loadImage(PokerUtil.getFilePath(cards.get(0)), opponentFirstCard);
-		loadImage(PokerUtil.getFilePath(cards.get(1)), opponentSecondCard);
+		loadImage(PokerUtil.getFilePath(cards[0]), opponentFirstCard);
+		loadImage(PokerUtil.getFilePath(cards[1]), opponentSecondCard);
 	}
 
 	@FXML

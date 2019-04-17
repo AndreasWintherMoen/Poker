@@ -5,20 +5,22 @@ import java.util.List;
 
 public class CardHolder
 {
-	private List<Card> cards = new ArrayList<Card>();
+//	private List<Card> cards = new ArrayList<Card>();
+	private Card[] cards;
 	
 	public CardHolder(Deck deck)
 	{
-		drawCard(deck);
-		drawCard(deck);
+		cards = new Card[2];
+		cards[0] = drawCard(deck);
+		cards[1] = drawCard(deck);
 	}
 	
-	private void drawCard(Deck deck)
+	private Card drawCard(Deck deck)
 	{
-		cards.add(deck.drawCard());
+		return deck.drawCard();
 	}
 
-	public List<Card> getCards()
+	public Card[] getCards()
 	{
 		return this.cards;
 	}
