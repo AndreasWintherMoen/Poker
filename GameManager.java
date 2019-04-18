@@ -2,6 +2,8 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import poker.Enums.*;
 
@@ -326,12 +328,6 @@ public class GameManager
 		if (usersTurn) return;
 		ai.doAction();
 	}
-
-	private Player determineWinner()
-	{
-		System.out.println("GameManager::determineWinner - Not implemented");
-		return this.user;
-	}
 	
 	private void gatherBets()
 	{
@@ -350,5 +346,48 @@ public class GameManager
 		{
 			return !usersTurn;
 		}
+	}
+	
+	private Player determineWinner()
+	{
+		System.out.println("GameManager::determineWinner - Not implemented");
+		
+		List<Card> availableUserCards = Stream
+				.concat(user.getCards().stream(), tableCards.stream())
+				.collect(Collectors.toList());
+		
+		
+		
+		return this.user;
+	}
+	
+	private boolean isFlush(List<Card> cards)
+	{
+		System.out.println("GameManager::isFlush - Not Implemented");
+		return false;
+	}
+	
+	private boolean isStraight(List<Card> cards)
+	{
+		System.out.println("GameManager::isStraight - Not Implemented");
+		return false;
+	}
+	
+	private boolean isPair(List<Card> cards)
+	{
+		System.out.println("GameManager::isPair - Not Implemented");
+		return false;
+	}
+	
+	private boolean isThreeOfAKind(List<Card> cards)
+	{
+		System.out.println("GameManager::isThreeOfAKind - Not Implemented");
+		return false;
+	}
+	
+	private boolean isFourOfAKind(List<Card> cards)
+	{
+		System.out.println("GameManager::isFourOfAKind - Not Implemented");
+		return false;
 	}
 }

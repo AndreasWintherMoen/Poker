@@ -1,5 +1,8 @@
 package poker;
 
+import java.util.Arrays;
+import java.util.List;
+
 import poker.Enums.Moves;
 
 public class Player
@@ -33,6 +36,11 @@ public class Player
 		{
 			UIManager.instance.displayOpponentCards(this.cards.getCards());
 		}
+	}
+	
+	public List<Card> getCards()
+	{
+		return Arrays.asList(cards.getCards());
 	}
 	
 	public int getMoney()
