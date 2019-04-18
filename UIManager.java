@@ -56,9 +56,9 @@ public class UIManager
 
 		new GameManager();
 
-		displayTestCards();
-		displayTableCards(Round.PREFLOP, null);
+		displayBackground();
 		loadDealerIcons();
+		updateUI();
 	}
 	
 	@FXML
@@ -93,6 +93,7 @@ public class UIManager
 
 	public void displayPlayerCards(Card[] cards)
 	{
+		System.out.println("displayPlayerCards: " + PokerUtil.getFilePath(cards[0]));
 		displayCard(cards[0], playerFirstCard);
 		displayCard(cards[1], playerSecondCard);
 	}
@@ -241,17 +242,11 @@ public class UIManager
 		loadImage("src/poker/resources/dealer.png", playerDealerIcon);
 	}
 
-	private void displayTestCards()
+	private void displayBackground()
 	{
 		// The background is temporary
 		// TODO: Find a better background
 		loadImage("src/poker/resources/TableBackground.jpg", background); 
-		
-		// TODO: Find better card images which are 100x140 pixels (at least 10:14 ratio)
-		loadImage(PokerUtil.getFilePath(Cards.C1), playerFirstCard);
-		loadImage(PokerUtil.getFilePath(Cards.D5), playerSecondCard);
-		loadImage(PokerUtil.getFilePath(Cards.H10), opponentFirstCard);
-		loadImage(PokerUtil.getFilePath(Cards.S13), opponentSecondCard);
 	}
 	
 	private void loadImage(String filepath, ImageView view)
