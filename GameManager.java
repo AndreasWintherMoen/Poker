@@ -1,9 +1,13 @@
 package poker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.base.Functions;
 
 import poker.Enums.*;
 
@@ -353,18 +357,24 @@ public class GameManager
 		System.out.println("GameManager::determineWinner - Not implemented");
 		
 		List<Card> availableUserCards = Stream
-				.concat(user.getCards().stream(), tableCards.stream())
+				.concat(Arrays.asList(user.getCards()).stream(), tableCards.stream())
 				.collect(Collectors.toList());
 		
-		
+		System.out.println(isFlush(availableUserCards));
 		
 		return this.user;
 	}
 	
 	private boolean isFlush(List<Card> cards)
 	{
-		System.out.println("GameManager::isFlush - Not Implemented");
-		return false;
+		return cards.stream()
+		.map(card -> card.getSuit())
+		.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+		.values()
+		.stream()
+		.mapToLong(c -> c)
+		.max()
+		.getAsLong() >= 5;
 	}
 	
 	private boolean isStraight(List<Card> cards)
