@@ -1,13 +1,17 @@
 package poker;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 import poker.Enums.Cards;
+import poker.Enums.Round;
 
 public class UIManager
 {
@@ -21,6 +25,15 @@ public class UIManager
 	@FXML ImageView tableCard3;
 	@FXML ImageView tableCard4;
 	@FXML ImageView tableCard5;
+	@FXML ImageView opponentDealerIcon;
+	@FXML ImageView playerDealerIcon;
+	
+	@FXML Text statusMessage;
+	@FXML Text totalPot;
+	@FXML Text opponentMoney;
+	@FXML Text opponentBet;
+	@FXML Text playerBet;
+	@FXML Text playerMoney;
 	
 	@FXML Button restartButton;
 	@FXML Button foldButton;
@@ -37,16 +50,47 @@ public class UIManager
 		{
 			throw new RuntimeException("Tried to initialize more than one UIManager.");
 		}
-		
 		System.out.println("UI Manager initialized...");
-		displayTestCards();
-		displayTableCards();
 		
 		instance = this;
-		
+
 		new GameManager();
+
+		displayTestCards();
+		displayTableCards(Round.PREFLOP, null);
+		loadDealerIcons();
 	}
 	
+	@FXML
+	protected void clickRestart()
+	{
+		GameManager.instance.newGame();
+	}
+	
+	@FXML
+	protected void clickFold()
+	{
+		GameManager.instance.getPlayer().fold();
+	}
+	
+	@FXML
+	protected void clickCheck()
+	{
+		GameManager.instance.getPlayer().check();
+	}
+	
+	@FXML
+	protected void clickCall()
+	{
+		GameManager.instance.getPlayer().call();
+	}
+	
+	@FXML
+	protected void clickRaise()
+	{
+		GameManager.instance.getPlayer().raise();
+	}
+
 	public void displayPlayerCards(Card[] cards)
 	{
 		displayCard(cards[0], playerFirstCard);
@@ -59,44 +103,131 @@ public class UIManager
 		displayCard(cards[1], opponentSecondCard);
 	}
 	
-	public void displayTableCards()
+	public void updateUI()
 	{
-		// Displays empty table cards
-		displayCard(null, tableCard1);
-		displayCard(null, tableCard2);
-		displayCard(null, tableCard3);
-		displayCard(null, tableCard4);
-		displayCard(null, tableCard5);
+		if (GameManager.instance.usersTurn)
+		{
+			playerTurn();
+		}
+		else
+		{
+			opponentTurn();
+		}
+		
+		displayTableCards();
+		updateMoneyDisplay();
+		updateDealerIcon();
+		toggleButtons();
 	}
 	
-	@FXML
-	protected void clickRestart()
+	private void toggleButtons()
 	{
-		GameManager.instance.newGame();
+		Player user = GameManager.instance.getPlayer();
+		foldButton.setDisable(!GameManager.instance.canFold(user));	
+		checkButton.setDisable(!GameManager.instance.canCheck(user));
+		callButton.setDisable(!GameManager.instance.canCall(user));
+		raiseButton.setDisable(!GameManager.instance.canRaise(user));
 	}
 	
-	@FXML
-	protected void clickFold()
+	private void playerTurn()
 	{
-		System.out.println("Not implemented");
+		statusMessage.setStyle("-fx-fill: #0090e0;");
+		statusMessage.setText("Your Turn");
 	}
-
-	@FXML
-	protected void clickCheck()
+	
+	private void opponentTurn()
 	{
-		System.out.println("Not implemented");
+		statusMessage.setStyle("-fx-fill: #c00033;");
+		statusMessage.setText("Opponent's Turn");
 	}
-
-	@FXML
-	protected void clickCall()
+	
+	private void displayTableCards()
 	{
-		System.out.println("Not implemented");
+		List<Card> tableCards = GameManager.instance.getTableCards();
+		List<ImageView> images = new ArrayList<ImageView>(Arrays.asList(
+				tableCard1,tableCard2,tableCard3,tableCard4,tableCard5));
+		for (int i = 0; i < 5; i++)
+		{
+			if (tableCards.size() <= i)
+			{
+				displayCard(null, images.get(i));
+			}
+			else
+			{
+				displayCard(tableCards.get(i), images.get(i));
+			}
+		}
 	}
-
-	@FXML
-	protected void clickRaise()
+	
+	private void updateDealerIcon()
 	{
-		System.out.println("Not implemented");
+		if (GameManager.instance.isDealer(GameManager.instance.getPlayer()))
+		{
+			playerDealerIcon.setVisible(true);
+			opponentDealerIcon.setVisible(false);
+		}
+		else
+		{
+			System.out.println("Opponent is dealer");
+			playerDealerIcon.setVisible(false);
+			opponentDealerIcon.setVisible(true);
+		}
+	}
+	
+	private void displayTableCards(Round round, List<Card> cards)
+	{
+		switch (round)
+		{
+		case PREFLOP:
+			displayCard(null, tableCard1);
+			displayCard(null, tableCard2);
+			displayCard(null, tableCard3);
+			displayCard(null, tableCard4);
+			displayCard(null, tableCard5);
+			break;
+		case FLOP:
+			displayCard(cards.get(0), tableCard1);
+			displayCard(cards.get(1), tableCard2);
+			displayCard(cards.get(2), tableCard3);
+			break;
+		case RIVER:
+			displayCard(cards.get(0), tableCard4);
+			break;
+		case TURN:
+			displayCard(cards.get(0), tableCard5);
+			break;
+		default:
+			throw new IllegalArgumentException("Round enum case not implemented");
+		}
+	}
+	
+	private void updateMoneyDisplay()
+	{
+		Player opponent = GameManager.instance.getOpponent();
+		opponentMoney.setText("$" + opponent.getMoney());
+		int opponentBetInt = opponent.getBet();
+		if (opponentBetInt > 0)
+		{
+			opponentBet.setText("$" + Integer.toString(opponentBetInt));			
+		}
+		else
+		{
+			opponentBet.setText("");
+		}
+		
+		Player player = GameManager.instance.getPlayer();
+		playerMoney.setText("$" + player.getMoney());
+		int playerBetInt = player.getBet();
+		if (playerBetInt > 0)
+		{
+			playerBet.setText("$" + Integer.toString(playerBetInt));			
+		}
+		else
+		{
+			playerBet.setText("");
+		}
+		
+		totalPot.setText("$" + GameManager.instance.getPot());
 	}
 	
 	private void displayCard(Card card, ImageView cardDisplay)
@@ -104,6 +235,12 @@ public class UIManager
 		loadImage(PokerUtil.getFilePath(card), cardDisplay);
 	}
 	
+	private void loadDealerIcons()
+	{
+		loadImage("src/poker/resources/dealer.png", opponentDealerIcon);
+		loadImage("src/poker/resources/dealer.png", playerDealerIcon);
+	}
+
 	private void displayTestCards()
 	{
 		// The background is temporary

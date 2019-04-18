@@ -1,5 +1,7 @@
 package poker;
 
+import poker.Enums.Cards;
+
 public class Card
 {
 	private final char suit;

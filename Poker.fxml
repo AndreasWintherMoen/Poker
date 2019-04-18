@@ -6,6 +6,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="720.0" maxWidth="1280.0" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poker.UIManager">
    <children>
@@ -14,20 +16,45 @@
          <children>
             <HBox alignment="BOTTOM_CENTER" minWidth="1280.0" prefHeight="160.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="opponentFirstCard" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0" />
-                  <ImageView fx:id="opponentSecondCard" fitHeight="150.0" fitWidth="95.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
+                  <ImageView fx:id="opponentDealerIcon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" translateX="40.0" translateY="-10.0" />
+                  <ImageView fx:id="opponentFirstCard" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="80.0" />
+                  <ImageView fx:id="opponentSecondCard" fitHeight="150.0" fitWidth="95.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" translateX="100.0" />
+                  <VBox maxHeight="80.0" minHeight="80.0" prefHeight="80.0" prefWidth="201.0" translateX="130.0">
+                     <children>
+                        <Text fx:id="opponentMoney" strokeType="OUTSIDE" strokeWidth="0.0" translateY="5.0" wrappingWidth="200.81298828125">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="opponentBet" layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="35.0" wrappingWidth="200.81298828125">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
             <HBox alignment="CENTER" minHeight="350.0" minWidth="1280.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="tableCard1" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="-40.0" />
-                  <ImageView fx:id="tableCard2" fitHeight="150.0" fitWidth="95.0" layoutX="603.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="-20.0" />
-                  <ImageView fx:id="tableCard3" fitHeight="150.0" fitWidth="95.0" layoutX="650.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="tableCard4" fitHeight="150.0" fitWidth="95.0" layoutX="698.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="20.0" />
-                  <ImageView fx:id="tableCard5" fitHeight="150.0" fitWidth="95.0" layoutX="745.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="40.0" />
+                  <ImageView fx:id="tableCard1" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
+                  <ImageView fx:id="tableCard2" fitHeight="150.0" fitWidth="95.0" layoutX="603.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="30.0" />
+                  <ImageView fx:id="tableCard3" fitHeight="150.0" fitWidth="95.0" layoutX="650.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="50.0" />
+                  <ImageView fx:id="tableCard4" fitHeight="150.0" fitWidth="95.0" layoutX="698.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="70.0" />
+                  <ImageView fx:id="tableCard5" fitHeight="150.0" fitWidth="95.0" layoutX="745.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" translateX="90.0" />
+                  <Text fx:id="totalPot" strokeType="OUTSIDE" strokeWidth="0.0" translateY="100.0" wrappingWidth="100.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
                </children></HBox>
             <HBox alignment="CENTER_RIGHT" layoutX="10.0" layoutY="170.0" minHeight="50.0" minWidth="1280.0" prefHeight="50.0" prefWidth="200.0">
                <children>
+                  <Text fx:id="statusMessage" fill="c00033" strokeType="OUTSIDE" strokeWidth="0.0" translateX="-450.0" wrappingWidth="228.0">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Text>
                   <Button fx:id="restartButton" mnemonicParsing="false" onAction="#clickRestart" text="Restart">
                      <HBox.margin>
                         <Insets right="300.0" />
@@ -38,17 +65,17 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="checkButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" text="Check">
+                  <Button fx:id="checkButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" onAction="#clickCheck" text="Check">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="callButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" text="Call">
+                  <Button fx:id="callButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" onAction="#clickCall" text="Call">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="raiseButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" text="Raise">
+                  <Button fx:id="raiseButton" layoutX="1224.0" layoutY="22.0" mnemonicParsing="false" onAction="#clickRaise" text="Raise">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
@@ -57,8 +84,23 @@
             </HBox>
             <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" minWidth="1280.0" prefHeight="160.0" prefWidth="200.0">
                <children>
-                  <ImageView fx:id="playerFirstCard" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="-10.0" />
-                  <ImageView fx:id="playerSecondCard" fitHeight="150.0" fitWidth="95.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" translateX="10.0" />
+                  <ImageView fx:id="playerDealerIcon" fitHeight="50.0" fitWidth="50.0" layoutX="555.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" translateX="40.0" translateY="10.0" />
+                  <ImageView fx:id="playerFirstCard" fitHeight="150.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" translateX="80.0" />
+                  <ImageView fx:id="playerSecondCard" fitHeight="150.0" fitWidth="95.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" translateX="100.0" />
+                  <VBox maxHeight="80.0" minHeight="80.0" prefHeight="80.0" prefWidth="201.0" translateX="130.0">
+                     <children>
+                        <Text fx:id="playerBet" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="200.81298828125">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                        <Text fx:id="playerMoney" layoutX="10.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="30.0" wrappingWidth="200.81298828125">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </VBox>
                </children>
             </HBox>
          </children>

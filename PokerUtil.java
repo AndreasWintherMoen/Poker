@@ -1,5 +1,7 @@
 package poker;
 
+import poker.Enums.Cards;
+
 public class PokerUtil
 {
 	public static String getFilePath(Card card)

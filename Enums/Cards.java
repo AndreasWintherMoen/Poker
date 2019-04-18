@@ -1,4 +1,4 @@
-package poker;
+package poker.Enums;
 
 public enum Cards 
 {
