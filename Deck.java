@@ -15,7 +15,7 @@ public class Deck
 	{
 		System.out.println("******* New Deck created");
 		cards = fillDeck();
-//		shuffleDeck(cards);
+		shuffleDeck(cards);
 	}
 	
 	public Card drawCard()
