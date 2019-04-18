@@ -23,6 +23,16 @@ public class Card
 		this.value = value;
 	}
 	
+	public char getSuit()
+	{
+		return this.suit;
+	}
+	
+	public int getValue()
+	{
+		return this.value;
+	}
+	
 	public static Card enumToCard(Cards enumValue)
 	{
 		switch(enumValue)

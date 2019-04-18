@@ -11,11 +11,11 @@ public class Deck
 	
 	private List<Card> cards = new ArrayList<Card>();
 	
-	
 	public Deck()
 	{
+		System.out.println("******* New Deck created");
 		cards = fillDeck();
-		shuffleDeck(cards);
+//		shuffleDeck(cards);
 	}
 	
 	public Card drawCard()

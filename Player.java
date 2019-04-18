@@ -36,11 +36,13 @@ public class Player
 		{
 			UIManager.instance.displayOpponentCards(this.cards.getCards());
 		}
+		
+		System.out.println(this);
 	}
 	
-	public List<Card> getCards()
+	public Card[] getCards()
 	{
-		return Arrays.asList(cards.getCards());
+		return cards.getCards();
 	}
 	
 	public int getMoney()

@@ -43,6 +43,6 @@ public class AI
 			    			System.out.println("AI Cannot move");
 			    		}
 			        }
-			    }, 3000);
+			    }, 1000);
 	}
 }
