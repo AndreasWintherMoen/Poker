@@ -358,17 +358,34 @@ public class GameManager
 	
 	private Player determineWinner()
 	{
-		System.out.println("GameManager::determineWinner - Not implemented");
+		System.out.println("*** GameManager::determineWinner ***");
+		
+		List<Card> availableOpponentCards = Stream
+				.concat(Arrays.asList(opponent.getCards()).stream(), tableCards.stream())
+				.collect(Collectors.toList());
+		
+		System.out.println("- Opponent Cards: ");
+		availableOpponentCards.stream().forEach(card -> System.out.print(card.toString() + ", "));
+		System.out.println("");
+		System.out.println("isFlush:\t" + isFlush(availableOpponentCards));
+		System.out.println("isStraight:\t" + isStraight(availableOpponentCards));
+		System.out.println("isFourOfAKind:\t" + isFourOfAKind(availableOpponentCards));
+		System.out.println("isThreeOfAKind:\t" + isThreeOfAKind(availableOpponentCards));
+		System.out.println("isPair:\t\t" + isPair(availableOpponentCards));
 		
 		List<Card> availableUserCards = Stream
 				.concat(Arrays.asList(user.getCards()).stream(), tableCards.stream())
 				.collect(Collectors.toList());
 		
+		System.out.println("- User Cards: ");
+		availableUserCards.stream().forEach(card -> System.out.print(card.toString() + ", "));
+		System.out.println("");
 		System.out.println("isFlush:\t" + isFlush(availableUserCards));
 		System.out.println("isStraight:\t" + isStraight(availableUserCards));
 		System.out.println("isFourOfAKind:\t" + isFourOfAKind(availableUserCards));
 		System.out.println("isThreeOfAKind:\t" + isThreeOfAKind(availableUserCards));
 		System.out.println("isPair:\t\t" + isPair(availableUserCards));
+
 		return this.user;
 	}
 	
@@ -426,7 +443,7 @@ public class GameManager
 				.stream()
 				.mapToLong(c -> c)
 				.max()
-				.getAsLong() >= 2;
+				.getAsLong() == 2;
 	}
 	
 	private boolean isThreeOfAKind(List<Card> cards)
@@ -438,7 +455,7 @@ public class GameManager
 				.stream()
 				.mapToLong(c -> c)
 				.max()
-				.getAsLong() >= 3;
+				.getAsLong() == 3;
 	}
 	
 	private boolean isFourOfAKind(List<Card> cards)
@@ -450,32 +467,6 @@ public class GameManager
 				.stream()
 				.mapToLong(c -> c)
 				.max()
-				.getAsLong() >= 4;
-		
-		
-//		List<Integer> cardValues = cards.stream()
-//				.map(card -> card.getValue())
-//				.sorted()
-//				.collect(Collectors.toList());
-//		return (Collections.frequency(cardValues, ));
-//		
-//		int equalityCounter = 1;
-//		for (int i = 1; i < cardValues.size(); i++)
-//		{
-//			if (cardValues.get(i) == cardValues.get(i - 1))
-//			{
-//				equalityCounter++;
-//			}
-//			else
-//			{
-//				equalityCounter = 1;
-//			}
-//			if (equalityCounter == 4) 
-//			{
-//				return true;
-//			}
-//		}
-//		
-//		return false;
+				.getAsLong() == 4;
 	}
 }
