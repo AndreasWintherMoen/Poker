@@ -2,13 +2,17 @@ package poker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.google.common.base.Functions;
 
+import javafx.util.Pair;
 import poker.Enums.*;
 
 public class GameManager
@@ -360,44 +364,118 @@ public class GameManager
 				.concat(Arrays.asList(user.getCards()).stream(), tableCards.stream())
 				.collect(Collectors.toList());
 		
-		System.out.println(isFlush(availableUserCards));
-		
+		System.out.println("isFlush:\t" + isFlush(availableUserCards));
+		System.out.println("isStraight:\t" + isStraight(availableUserCards));
+		System.out.println("isFourOfAKind:\t" + isFourOfAKind(availableUserCards));
+		System.out.println("isThreeOfAKind:\t" + isThreeOfAKind(availableUserCards));
+		System.out.println("isPair:\t\t" + isPair(availableUserCards));
 		return this.user;
 	}
+	
+	// Some of these stream implementations may seem a bit unnecessary. This project is something I've done to
+	// practice for my exams and stream is something I need to practice, so I'm overdoing it a bit here. Sorry :)
 	
 	private boolean isFlush(List<Card> cards)
 	{
 		return cards.stream()
-		.map(card -> card.getSuit())
-		.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-		.values()
-		.stream()
-		.mapToLong(c -> c)
-		.max()
-		.getAsLong() >= 5;
+			.map(card -> card.getSuit())
+			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+			.values()
+			.stream()
+			.mapToLong(c -> c)
+			.max()
+			.getAsLong() >= 5;
 	}
 	
 	private boolean isStraight(List<Card> cards)
 	{
-		System.out.println("GameManager::isStraight - Not Implemented");
-		return false;
+		List<Integer> cardValues = cards.stream()
+			.map(card -> card.getValue())
+			.sorted()
+			.distinct()
+			.collect(Collectors.toList());
+		
+		int elementsInARow = 1;
+		for (int i = 1; i < cardValues.size(); i++)
+		{
+			// If ith element is 1 higher than the i-1th element, and special case with ace and king
+			if (cardValues.get(i) - cardValues.get(i - 1) == 1)
+			{
+				elementsInARow++;
+				
+				if (cardValues.get(i) == 13 && cardValues.get(0) == 1)
+				{
+					elementsInARow++;
+				}
+				if (elementsInARow == 5) break;
+			}
+			else
+			{
+				elementsInARow = 1;
+			}
+		}
+		return (elementsInARow == 5);
 	}
 	
 	private boolean isPair(List<Card> cards)
 	{
-		System.out.println("GameManager::isPair - Not Implemented");
-		return false;
+		return cards.stream()
+				.map(card -> card.getValue())
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.values()
+				.stream()
+				.mapToLong(c -> c)
+				.max()
+				.getAsLong() >= 2;
 	}
 	
 	private boolean isThreeOfAKind(List<Card> cards)
 	{
-		System.out.println("GameManager::isThreeOfAKind - Not Implemented");
-		return false;
+		return cards.stream()
+				.map(card -> card.getValue())
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.values()
+				.stream()
+				.mapToLong(c -> c)
+				.max()
+				.getAsLong() >= 3;
 	}
 	
 	private boolean isFourOfAKind(List<Card> cards)
 	{
-		System.out.println("GameManager::isFourOfAKind - Not Implemented");
-		return false;
+		return cards.stream()
+				.map(card -> card.getValue())
+				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.values()
+				.stream()
+				.mapToLong(c -> c)
+				.max()
+				.getAsLong() >= 4;
+		
+		
+//		List<Integer> cardValues = cards.stream()
+//				.map(card -> card.getValue())
+//				.sorted()
+//				.collect(Collectors.toList());
+//		return (Collections.frequency(cardValues, ));
+//		
+//		int equalityCounter = 1;
+//		for (int i = 1; i < cardValues.size(); i++)
+//		{
+//			if (cardValues.get(i) == cardValues.get(i - 1))
+//			{
+//				equalityCounter++;
+//			}
+//			else
+//			{
+//				equalityCounter = 1;
+//			}
+//			if (equalityCounter == 4) 
+//			{
+//				return true;
+//			}
+//		}
+//		
+//		return false;
 	}
 }
