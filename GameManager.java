@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -395,8 +396,7 @@ public class GameManager
 	private boolean isFlush(List<Card> cards)
 	{
 		return cards.stream()
-			.map(card -> card.getSuit())
-			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+			.collect(Collectors.groupingBy(Card::getSuit, Collectors.counting()))
 			.values()
 			.stream()
 			.mapToLong(c -> c)
@@ -437,8 +437,7 @@ public class GameManager
 	private boolean isPair(List<Card> cards)
 	{
 		return cards.stream()
-				.map(card -> card.getValue())
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
 				.values()
 				.stream()
 				.mapToLong(c -> c)
@@ -449,8 +448,7 @@ public class GameManager
 	private boolean isThreeOfAKind(List<Card> cards)
 	{
 		return cards.stream()
-				.map(card -> card.getValue())
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
 				.values()
 				.stream()
 				.mapToLong(c -> c)
@@ -461,8 +459,7 @@ public class GameManager
 	private boolean isFourOfAKind(List<Card> cards)
 	{
 		return cards.stream()
-				.map(card -> card.getValue())
-				.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
 				.values()
 				.stream()
 				.mapToLong(c -> c)
