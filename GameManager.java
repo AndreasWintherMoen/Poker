@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 
 import javafx.util.Pair;
 import poker.Enums.*;
@@ -360,7 +361,14 @@ public class GameManager
 	
 	private Player determineWinner()
 	{
-		System.out.println("*** GameManager::determineWinner ***");
+		printOutcome();
+
+		return this.user;
+	}
+	
+	private void printOutcome()
+	{
+		System.out.println("*** GameManager::printOutcome ***");
 		
 		List<Card> availableOpponentCards = Stream
 				.concat(Arrays.asList(opponent.getCards()).stream(), tableCards.stream())
@@ -387,8 +395,144 @@ public class GameManager
 		System.out.println("isFourOfAKind:\t" + getFourOfAKind(availableUserCards));
 		System.out.println("isThreeOfAKind:\t" + getThreesOfAKind(availableUserCards));
 		System.out.println("isPair:\t\t" + getPairs(availableUserCards));
-
-		return this.user;
+	}
+	
+	private boolean isRoyalFlush(List<Card> cards)
+	{
+		Pair<Boolean, Integer> straightFlush = isStraightFlush(cards);
+		return (straightFlush.getKey() && straightFlush.getValue() == 14);
+	}
+	
+	private Pair<Boolean, Integer> isStraightFlush(List<Card> cards)
+	{
+		// Determimnes if input cards contains a straight flush, and if true also returns the high card.
+		// If royal flush, high card is set to 14. 
+		
+		Pair<Boolean, List<Card>> flush = getFlush(cards);
+		if (flush.getKey() == false)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		
+		Pair<Boolean, List<Card>> straightFlush = getStraight(flush.getValue());
+		
+		if (straightFlush.getKey() == false)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		
+		List<Card> straightFlushCards = straightFlush.getValue();
+		if (straightFlushCards.get(0).getValue() == 1 && 
+				straightFlushCards.get(straightFlushCards.size() - 1).getValue() == 1)
+		{
+			// royal flush, so return 14 as highCard
+			return new Pair<Boolean, Integer> (true, 14);
+		}
+		int highCard = straightFlushCards.get(straightFlushCards.size() - 1).getValue();
+		return new Pair<Boolean, Integer> (true, highCard);
+	}
+	
+	private Pair<Boolean, Integer> isFourOfAKind(List<Card> cards)
+	{
+		Pair<Boolean, List<Card>> fourOfAKindCards = getFourOfAKind(cards);
+		if (fourOfAKindCards.getKey() == false)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		return new Pair<Boolean, Integer> (true, fourOfAKindCards.getValue().get(0).getValue());
+	}
+	
+	private Pair<Boolean, List<Integer>> isFlush(List<Card> cards)
+	{
+		// Returns true if is flush, and the card values (in case both players have a flush)
+		Pair<Boolean, List<Card>> flush = getFlush(cards);
+		if (flush.getKey() == false)
+		{
+			return new Pair<Boolean, List<Integer>> (false, null);
+		}
+		return new Pair<Boolean, List<Integer>> 
+			(true, flush.getValue().stream().map(Card::getValue).collect(Collectors.toList()));
+	}
+	
+	private Pair<Boolean, Integer> isStraight(List<Card> cards)
+	{
+		Pair<Boolean, List<Card>> straightCards = getStraight(cards);
+		if (straightCards.getKey() == false)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		return new Pair<Boolean, Integer> (true, straightCards.getValue().get(straightCards.getValue().size() - 1).getValue());
+	}
+	
+	private Pair<Boolean, Integer> isThreeOfAKind(List<Card> cards)
+	{
+		Pair<Boolean, List<List<Card>>> threeOfAKindCards = getThreesOfAKind(cards);
+		if (threeOfAKindCards.getKey() == false)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		if (threeOfAKindCards.getValue().size() == 1)
+		{
+			// Only one instance of three of a kind
+			List<Card> actualCards = threeOfAKindCards.getValue().get(0);
+			return new Pair<Boolean, Integer> (true, actualCards.get(actualCards.size() - 1).getValue());
+		}
+		List<Card> firstActualCards = threeOfAKindCards.getValue().get(0);
+		List<Card> secondActualCards = threeOfAKindCards.getValue().get(0);
+		if (firstActualCards.get(0).getValue() > secondActualCards.get(0).getValue())
+		{
+			return new Pair<Boolean, Integer> (true, firstActualCards.get(0).getValue());
+		}
+		else
+		{
+			return new Pair<Boolean, Integer> (true, secondActualCards.get(0).getValue());
+		}
+	}
+	
+	private Pair<Boolean, List<Integer>> isTwoPair(List<Card> cards)
+	{
+		Pair<Boolean, List<List<Card>>> pairs = getPairs(cards);
+		if (pairs.getKey() == false || pairs.getValue().size() < 2)
+		{
+			return new Pair<Boolean, List<Integer>> (false, null);
+		}
+		
+		if (pairs.getValue().size() > 2)
+		{
+			// We have 3 pairs, so we have to find the 2 highest ones
+			List<Integer> values = new ArrayList<Integer>();
+			for (List<Card> pair : pairs.getValue())
+			{
+				values.add(pair.get(0).getValue());
+			}
+			return new Pair<Boolean, List<Integer>> (true, values);
+		}
+		
+		// We have two pairs, so we return those
+		List<Integer> values = pairs.getValue().stream()
+				.map(pairList -> pairList.get(0).getValue()).collect(Collectors.toList());
+		return new Pair<Boolean, List<Integer>> (true, values);
+	}
+	
+	private Pair<Boolean, Integer> isPair(List<Card> cards)
+	{
+		Pair<Boolean, List<List<Card>>> pair = getPairs(cards);
+		if (pair.getKey() == false || pair.getValue().size() != 1)
+		{
+			return new Pair<Boolean, Integer> (false, null);
+		}
+		
+		return new Pair<Boolean, Integer> (true, pair.getValue().get(0).get(0).getValue());
+	}
+	
+	private List<Integer> getHighCards(List<Card> cards)
+	{
+		// Returns the values of the input cards in sorted order from largest to smallest
+		List<Integer> output = cards.stream()
+				.map(card -> card.getValue())
+				.sorted()
+				.collect(Collectors.toList());
+		return Lists.reverse(output);
 	}
 	
 	// Some of these stream implementations may seem a bit unnecessary. This project is something I've done to
@@ -414,6 +558,7 @@ public class GameManager
 				final char flushSuit = suitGroup.getKey();
 				List<Card> flushCards = cards.stream()
 						.filter(card -> card.getSuit() == flushSuit)
+						.sorted()
 						.collect(Collectors.toList());
 				return new Pair<Boolean, List<Card>> (true, flushCards);
 			}
