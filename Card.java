@@ -2,7 +2,7 @@ package poker;
 
 import poker.Enums.Cards;
 
-public class Card
+public class Card implements Comparable<Card>
 {
 	private final char suit;
 	private final int value;
@@ -150,6 +150,12 @@ public class Card
 	public String toString()
 	{
 		return String.format("%s%s", intValueToString(this.value), this.suit);
+	}
+	
+	@Override
+	public int compareTo(Card o)
+	{
+		return Integer.compare(this.value, o.getValue());
 	}
 	
 	private String intValueToString(int value) throws IllegalStateException
