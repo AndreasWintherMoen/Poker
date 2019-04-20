@@ -3,6 +3,7 @@ package poker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiPredicate;
@@ -368,11 +369,11 @@ public class GameManager
 		System.out.println("- Opponent Cards: ");
 		availableOpponentCards.stream().forEach(card -> System.out.print(card.toString() + ", "));
 		System.out.println("");
-		System.out.println("isFlush:\t" + isFlush(availableOpponentCards));
-		System.out.println("isStraight:\t" + isStraight(availableOpponentCards));
-		System.out.println("isFourOfAKind:\t" + isFourOfAKind(availableOpponentCards));
-		System.out.println("isThreeOfAKind:\t" + isThreeOfAKind(availableOpponentCards));
-		System.out.println("isPair:\t\t" + isPair(availableOpponentCards));
+		System.out.println("isFlush:\t" + getFlush(availableOpponentCards));
+		System.out.println("isStraight:\t" + getStraight(availableOpponentCards));
+		System.out.println("isFourOfAKind:\t" + getFourOfAKind(availableOpponentCards));
+		System.out.println("isThreeOfAKind:\t" + getThreesOfAKind(availableOpponentCards));
+		System.out.println("isPair:\t\t" + getPairs(availableOpponentCards));
 		
 		List<Card> availableUserCards = Stream
 				.concat(Arrays.asList(user.getCards()).stream(), tableCards.stream())
@@ -381,89 +382,175 @@ public class GameManager
 		System.out.println("- User Cards: ");
 		availableUserCards.stream().forEach(card -> System.out.print(card.toString() + ", "));
 		System.out.println("");
-		System.out.println("isFlush:\t" + isFlush(availableUserCards));
-		System.out.println("isStraight:\t" + isStraight(availableUserCards));
-		System.out.println("isFourOfAKind:\t" + isFourOfAKind(availableUserCards));
-		System.out.println("isThreeOfAKind:\t" + isThreeOfAKind(availableUserCards));
-		System.out.println("isPair:\t\t" + isPair(availableUserCards));
+		System.out.println("isFlush:\t" + getFlush(availableUserCards));
+		System.out.println("isStraight:\t" + getStraight(availableUserCards));
+		System.out.println("isFourOfAKind:\t" + getFourOfAKind(availableUserCards));
+		System.out.println("isThreeOfAKind:\t" + getThreesOfAKind(availableUserCards));
+		System.out.println("isPair:\t\t" + getPairs(availableUserCards));
 
 		return this.user;
 	}
 	
 	// Some of these stream implementations may seem a bit unnecessary. This project is something I've done to
 	// practice for my exams and stream is something I need to practice, so I'm overdoing it a bit here. Sorry :)
-	
-	private boolean isFlush(List<Card> cards)
+
+	private Pair<Boolean, List<Card>> getFlush(List<Card> cards)
 	{
-		return cards.stream()
-			.collect(Collectors.groupingBy(Card::getSuit, Collectors.counting()))
-			.values()
-			.stream()
-			.mapToLong(c -> c)
-			.max()
-			.getAsLong() >= 5;
+		// Group the cards by their suit
+		Map<Character, Long> groupedCards = cards.stream()
+				.collect(Collectors.groupingBy(Card::getSuit, Collectors.counting()));
+
+		// If the max number of a suit is less than 5, we don't have a flush
+		if (groupedCards.values().stream().mapToLong(c -> c).max().getAsLong() < 5)
+		{
+			return new Pair<Boolean, List<Card>> (false, null);
+		}
+		
+		// If we get here it means there is a flush, so we must find the correct suit and return the flush cards
+		for (Map.Entry<Character, Long> suitGroup : groupedCards.entrySet())
+		{
+			if (suitGroup.getValue() >= 5)
+			{
+				final char flushSuit = suitGroup.getKey();
+				List<Card> flushCards = cards.stream()
+						.filter(card -> card.getSuit() == flushSuit)
+						.collect(Collectors.toList());
+				return new Pair<Boolean, List<Card>> (true, flushCards);
+			}
+		}
+		
+		// We never get here, but Eclipse didn't let me compile without a definitive return statement
+		return new Pair<Boolean, List<Card>> (false, null);
 	}
 	
-	private boolean isStraight(List<Card> cards)
+	private Pair<Boolean, List<Card>> getStraight(List<Card> cards)
 	{
-		List<Integer> cardValues = cards.stream()
-			.map(card -> card.getValue())
+		cards = cards.stream()
 			.sorted()
 			.distinct()
 			.collect(Collectors.toList());
 		
+		List<Card> straightCards = new ArrayList<Card>();
+		
 		int elementsInARow = 1;
-		for (int i = 1; i < cardValues.size(); i++)
+		for (int i = 1; i < cards.size(); i++)
 		{
 			// If ith element is 1 higher than the i-1th element, and special case with ace and king
-			if (cardValues.get(i) - cardValues.get(i - 1) == 1)
+			if (cards.get(i).getValue() - cards.get(i - 1).getValue() == 1)
 			{
 				elementsInARow++;
+				straightCards.add(cards.get(i - 1));
+				straightCards.add(cards.get(i));
 				
-				if (cardValues.get(i) == 13 && cardValues.get(0) == 1)
+				if (cards.get(i).getValue() == 13 && cards.get(0).getValue() == 1)
 				{
 					elementsInARow++;
+					straightCards.add(cards.get(0));
+					
+					// This is the last element in the list, so we can return if we have at least 5 elementsInARow
+					if (elementsInARow >= 5)
+					{
+						return new Pair<Boolean, List<Card>> (true, straightCards);
+					}
 				}
-				if (elementsInARow == 5) break;
+			}
+			else if (elementsInARow >= 5)
+			{
+				return new Pair<Boolean, List<Card>> (true, straightCards);
 			}
 			else
 			{
 				elementsInARow = 1;
 			}
 		}
-		return (elementsInARow == 5);
+		return new Pair<Boolean, List<Card>> (false, null);
 	}
 	
-	private boolean isPair(List<Card> cards)
+	private Pair<Boolean, List<List<Card>>> getPairs(List<Card> cards)
 	{
-		return cards.stream()
-				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
-				.values()
-				.stream()
-				.mapToLong(c -> c)
-				.max()
-				.getAsLong() == 2;
+		Map<Integer, Long> groupedCards = cards.stream()
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()));
+		
+		if (groupedCards.values().stream()
+			.mapToLong(c -> c)
+			.max()
+			.getAsLong() != 2)
+		{
+			return new Pair<Boolean, List<List<Card>>> (false, null);
+		}
+		
+		// If we get here it means there is a pair, so we must find the correct pairs and return the pair cards
+		List<List<Card>> pairList = new ArrayList<List<Card>>();
+		for (Map.Entry<Integer, Long> pairGroup : groupedCards.entrySet())
+		{
+			if (pairGroup.getValue() == 2)
+			{
+				final int pairValue = pairGroup.getKey();
+				List<Card> pairCards = cards.stream()
+						.filter(card -> card.getValue() == pairValue)
+						.collect(Collectors.toList());
+				pairList.add(pairCards);
+			}
+		}
+		return new Pair<Boolean, List<List<Card>>> (true, pairList);
 	}
 	
-	private boolean isThreeOfAKind(List<Card> cards)
+	private Pair<Boolean, List<List<Card>>> getThreesOfAKind(List<Card> cards)
 	{
-		return cards.stream()
-				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
-				.values()
-				.stream()
-				.mapToLong(c -> c)
-				.max()
-				.getAsLong() == 3;
+		Map<Integer, Long> groupedCards = cards.stream()
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()));
+		
+		if (groupedCards.values().stream()
+			.mapToLong(c -> c)
+			.max()
+			.getAsLong() != 3)
+		{
+			return new Pair<Boolean, List<List<Card>>> (false, null);
+		}
+		
+		// If we get here it means there is a pair, so we must find the correct pairs and return the pair cards
+		List<List<Card>> pairList = new ArrayList<List<Card>>();
+		for (Map.Entry<Integer, Long> pairGroup : groupedCards.entrySet())
+		{
+			if (pairGroup.getValue() == 3)
+			{
+				final int pairValue = pairGroup.getKey();
+				List<Card> pairCards = cards.stream()
+						.filter(card -> card.getValue() == pairValue)
+						.collect(Collectors.toList());
+				pairList.add(pairCards);
+			}
+		}
+		return new Pair<Boolean, List<List<Card>>> (true, pairList);
 	}
 	
-	private boolean isFourOfAKind(List<Card> cards)
+	private Pair<Boolean, List<Card>> getFourOfAKind(List<Card> cards)
 	{
-		return cards.stream()
-				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()))
-				.values()
-				.stream()
-				.mapToLong(c -> c)
-				.max()
-				.getAsLong() == 4;
+		Map<Integer, Long> groupedCards = cards.stream()
+				.collect(Collectors.groupingBy(Card::getValue, Collectors.counting()));
+		
+		if (groupedCards.values().stream()
+			.mapToLong(c -> c)
+			.max()
+			.getAsLong() != 4)
+		{
+			return new Pair<Boolean, List<Card>> (false, null);
+		}
+		
+		// If we get here it means there is a pair, so we must find the correct pairs and return the pair cards
+		for (Map.Entry<Integer, Long> pairGroup : groupedCards.entrySet())
+		{
+			if (pairGroup.getValue() == 4)
+			{
+				final int pairValue = pairGroup.getKey();
+				List<Card> pairCards = cards.stream()
+						.filter(card -> card.getValue() == pairValue)
+						.collect(Collectors.toList());
+				return new Pair<Boolean, List<Card>> (true, pairCards);
+			}
+		}
+		
+		// We never get here, but Eclipse doesn't compile unless it has a definitive return statement
+		return new Pair<Boolean, List<Card>> (false, null);
 	}
 }
