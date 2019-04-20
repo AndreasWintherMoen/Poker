@@ -362,7 +362,13 @@ public class GameManager
 	private Player determineWinner()
 	{
 		printOutcome();
-
+		
+		List<Card> opponentCards = Stream
+				.concat(Arrays.asList(opponent.getCards()).stream(), tableCards.stream())
+				.collect(Collectors.toList());
+		List<Card> userCards = Stream
+				.concat(Arrays.asList(user.getCards()).stream(), tableCards.stream())
+				.collect(Collectors.toList());
 		return this.user;
 	}
 	
@@ -414,22 +420,12 @@ public class GameManager
 			return new Pair<Boolean, Integer> (false, null);
 		}
 		
-		Pair<Boolean, List<Card>> straightFlush = getStraight(flush.getValue());
-		
+		Pair<Boolean, Integer> straightFlush = isStraight(flush.getValue());
 		if (straightFlush.getKey() == false)
 		{
 			return new Pair<Boolean, Integer> (false, null);
 		}
-		
-		List<Card> straightFlushCards = straightFlush.getValue();
-		if (straightFlushCards.get(0).getValue() == 1 && 
-				straightFlushCards.get(straightFlushCards.size() - 1).getValue() == 1)
-		{
-			// royal flush, so return 14 as highCard
-			return new Pair<Boolean, Integer> (true, 14);
-		}
-		int highCard = straightFlushCards.get(straightFlushCards.size() - 1).getValue();
-		return new Pair<Boolean, Integer> (true, highCard);
+		return straightFlush;
 	}
 	
 	private Pair<Boolean, Integer> isFourOfAKind(List<Card> cards)
@@ -460,6 +456,12 @@ public class GameManager
 		if (straightCards.getKey() == false)
 		{
 			return new Pair<Boolean, Integer> (false, null);
+		}
+		if (straightCards.getValue().get(0).getValue() == 1 && 
+				straightCards.getValue().get(straightCards.getValue().size() - 1).getValue() == 13)
+		{
+			// If there is an ace and a king, we have a 10-A straight, so we return 14 as highest value
+			return new Pair<Boolean, Integer> (true, 14);
 		}
 		return new Pair<Boolean, Integer> (true, straightCards.getValue().get(straightCards.getValue().size() - 1).getValue());
 	}
