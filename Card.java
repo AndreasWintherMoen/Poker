@@ -30,6 +30,7 @@ public class Card implements Comparable<Card>
 	
 	public int getValue()
 	{
+		if (this.value == 1) return 14;
 		return this.value;
 	}
 	
