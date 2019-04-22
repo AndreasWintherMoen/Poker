@@ -320,7 +320,18 @@ public class GameManager
 		currentRound = currentRound.next();
 		if (currentRound == null)
 		{
-			determineWinner().addMoney(pot);
+			Player winner = determineWinner();
+			if (winner == null) 
+			{
+				// Draw, so distribute pot equally
+				user.addMoney(pot / 2);
+				opponent.addMoney(pot / 2);
+			}
+			else
+			{
+				determineWinner().addMoney(pot);
+			}
+			
 			newGame();
 		}
 		else
@@ -361,8 +372,10 @@ public class GameManager
 	
 	private Player determineWinner()
 	{
-		return DetermineWinner.determineWinner(this.user, this.opponent, this.tableCards);
-//		printOutcome();
+		Player winner = DetermineWinner.determineWinner(this.user, this.opponent, this.tableCards);
+		System.out.println("Winner: " + winner.toString());
+		return winner;
+		//		printOutcome();
 //		
 //		List<Card> opponentCards = Stream
 //				.concat(Arrays.asList(opponent.getCards()).stream(), tableCards.stream())

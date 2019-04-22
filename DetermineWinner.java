@@ -18,17 +18,33 @@ public class DetermineWinner
 	{
 		printOutcome(firstPlayer, secondPlayer, tableCards);
 		
-		List<Card> opponentCards = Stream
+		List<Card> secondPlayerCards = Stream
 				.concat(Arrays.asList(secondPlayer.getCards()).stream(), tableCards.stream())
 				.collect(Collectors.toList());
-		List<Card> userCards = Stream
+		List<Card> firstPlayerCards = Stream
 				.concat(Arrays.asList(firstPlayer.getCards()).stream(), tableCards.stream())
 				.collect(Collectors.toList());
 		
-		System.out.println("Opponent score:\t" + Arrays.toString(getPlayerScore(opponentCards)));
-		System.out.println("User score:    \t" + Arrays.toString(getPlayerScore(userCards)));
+		Integer[] secondPlayerScore = getPlayerScore(secondPlayerCards);
+		Integer[] firstPlayerScore = getPlayerScore(firstPlayerCards);
 		
-		return firstPlayer;
+		System.out.println("Opponent score:\t" + Arrays.toString(secondPlayerScore));
+		System.out.println("User score:    \t" + Arrays.toString(firstPlayerScore));
+		
+		for (int i = 0; i < secondPlayerScore.length; i++)
+		{
+			if (secondPlayerScore[i] > firstPlayerScore[i])
+			{
+				return secondPlayer;
+			}
+			else if (firstPlayerScore[i] > secondPlayerScore[i])
+			{
+				return firstPlayer;
+			}
+		}
+		
+		// If we get here it means the players have equal score
+		return null;
 	}
 	
 	private static Integer[] getPlayerScore(List<Card> cards)
