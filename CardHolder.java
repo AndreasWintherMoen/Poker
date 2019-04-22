@@ -1,8 +1,5 @@
 package poker;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CardHolder
 {
 //	private List<Card> cards = new ArrayList<Card>();

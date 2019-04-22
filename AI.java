@@ -3,10 +3,6 @@ package poker;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
-
 public class AI
 {
 	// This will be the computer player.
