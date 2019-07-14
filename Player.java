@@ -4,9 +4,9 @@ import poker.Enums.Moves;
 
 public class Player
 {
-	private CardHolder cards;
-	private boolean controlledByUser;
-	private int money, bet;
+	protected CardHolder cards;
+	protected boolean controlledByUser;
+	protected int money, bet;
 	
 	public Player(boolean controlledByUser, int money)
 	{
@@ -17,8 +17,8 @@ public class Player
 	@Override
 	public String toString()
 	{
-		return (controlledByUser ? "Player" : "Opponent") + " cards: " + 
-			this.cards.getCards()[0].toString() + ", " + this.cards.getCards()[1].toString();
+		return "[" + this.cards.getCards()[0].toString() + "," + this.cards.getCards()[1].toString() + 
+				"]" + (controlledByUser ? "Player" : "Opponent");
 	}
 	
 	public void drawNewCards(Deck deck)

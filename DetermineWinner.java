@@ -47,7 +47,7 @@ public class DetermineWinner
 		return null;
 	}
 	
-	private static Integer[] getPlayerScore(List<Card> cards)
+	public static Integer[] getPlayerScore(List<Card> cards)
 	{
 		// Returns a score of the cards as follows:
 		// Royal Flush: 	9, 14, 13, 12, 11, 10
@@ -60,6 +60,20 @@ public class DetermineWinner
 		// Two pair: 		2, X, Y, Z		 where X is the value of the highest pair, Y the value of the second pair, and Z the high card
 		// One pair: 		1, X, Y, Y, Y	 where X is the value of the pair and Y the 3 high cards
 		// High card: 		0, X, X, X, X, X where X are the high cards
+		
+		// The length of cards can be either 2 (pre-flop), 5 (flop), 6 (turn) or 7 (river)
+		// If it's only 2, then we only need to evaluate one pair and high card
+		if (cards.size() == 2)
+		{
+			Pair<Boolean, Integer> pair = isPair(cards);
+			if (pair.getKey())
+			{
+				return new Integer[] {1, pair.getValue()};
+			}
+			
+			List<Integer> highCards = getHighCards(cards);
+			return new Integer[] {0, highCards.get(0), highCards.get(1)};
+		}
 		
 		if (isRoyalFlush(cards))
 		{

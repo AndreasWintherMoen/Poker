@@ -10,8 +10,8 @@ public class GameManager
 	private Deck deck;
 	private List<Card> tableCards;
 	private Player user;
-	private Player opponent;
-	private AI ai;
+	private AI opponent;
+//	private AI ai;
 	private boolean userIsDealer;
 	private Round currentRound;
 	private int pot, currentBet;
@@ -39,9 +39,9 @@ public class GameManager
 		user = new Player(true, 1000);
 		
 		System.out.println("Creating opponent");
-		opponent = new Player(false, 1000);
+		opponent = new AI(1000);
 		
-		ai = new AI(opponent);
+//		ai = new AI(opponent);
 	}
 
 	public void newGame()
@@ -124,6 +124,11 @@ public class GameManager
 		return this.tableCards;
 	}
 	
+	public Round getCurrentRound()
+	{
+		return this.currentRound;
+	}
+	
 	public boolean isDealer(Player player)
 	{
 		if (player == this.user)
@@ -184,9 +189,18 @@ public class GameManager
 	
 	public boolean canCall(Player player)
 	{
-		if (isPlayersTurn(player) == false) return false;
-		if (currentBet > player.getBet() && player.canAfford(currentBet - player.getBet())) return true;
+		if (isPlayersTurn(player) == false) 
+		{
+			System.out.println("Not " + player.toString() + "'s turn");
+			return false;
+		}
+		if (currentBet > player.getBet() && player.canAfford(currentBet - player.getBet())) 
+		{
+			System.out.println(player.toString() + " can afford bet");
+			return true;
+		}
 		
+		System.out.println(player.toString() + " can not afford bet");
 		return false;
 	}
 	
@@ -334,7 +348,7 @@ public class GameManager
 	{
 		System.out.println("GameManager::callForAiMove");
 		if (usersTurn) return;
-		ai.doAction();
+		opponent.doAction();
 	}
 	
 	private void gatherBets()
